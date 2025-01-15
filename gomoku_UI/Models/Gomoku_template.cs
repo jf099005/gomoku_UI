@@ -88,5 +88,44 @@ namespace gomoku
                 return new Axis(history[history_len - 1,0], history[history_len - 1,1]);
             }
         }
+
+        public bool end_game()
+        {
+            for(int px = 0; px < board_size; px++)
+            {
+                for(int py = 0; py < board_size; py++)
+                {
+                    if (board[px, py] == 0)
+                        continue;
+                    for (int dx = -1; dx <= 1; dx++)
+                    {
+                        for (int dy = -1; dy <= 1; dy++)
+                        {
+                            if (dx == 0 && dy == 0)
+                                continue;
+
+                            if (px+ dx * 4 < 0 || px + dx * 4 >= board_size || py + dy * 4 < 0 || py + dy * 4 >= board_size)
+                            {
+                                continue;
+                            }
+                            bool flag = true;
+                            for(int i = 0; i < 5; i++)
+                            {
+                                if (board[px + dx * i, py + dy * i] != board[px, py])
+                                {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                            if (flag)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

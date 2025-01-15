@@ -12,37 +12,66 @@ using System.Windows.Shapes;
 
 using gomoku;
 using gomoku_UI.Models.Axis;
-namespace test2
+namespace gomoku_UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        public int board_size = 6;
-        public int board_grid_width = 65;
+        ViewModel _View;
+
+        enum User_State
+        {
+            gaming,
+            endgame,
+            discuss,
+        }
+
+        User_State current_state = User_State.gaming;
+
+        public int board_size = 10;
+        public int board_grid_width = 40;
         private int current_player;
-        private int current_player_type;
         private int[] players;//0: cpu, 1:human
         private Board board;
         private Gomoku_MCTS game;
         public MainWindow()
         {
+            //_View = (ViewModel)base.DataContext;
+            _View = new ViewModel();
+            this.DataContext = _View;
+
             board = new Board((short)board_size);
             InitializeComponent();
             game = new Gomoku_MCTS();
             players = new int[]{1,0};
-            current_player = 0;
+            current_player = 1;
         }
-        private void PutStone_event(object sender, MouseEventArgs e)
+
+        private async void PutStone_event(object sender, MouseEventArgs e)
         {
             //if (players[current_player] != 1)
             //    return;
-
+            if (current_state == User_State.endgame) 
+            {
+                Debug.WriteLine("game is ended");
+                return;
+            }
+            if(current_state == User_State.gaming)
+            {
+                if(e.RightButton == MouseButtonState.Pressed)
+                {
+                    return;
+                }
+                if (current_player != 1)
+                    return;
+            }
             Point position = Mouse.GetPosition(GameBoard);
             int px = (int)(position.X / board_grid_width);
             int py = (int)(position.Y / board_grid_width);
-
+            if (board[px, py] != 0)
+                return;
             if (e.LeftButton == MouseButtonState.Pressed)
                 current_player = 1;
 
@@ -50,29 +79,42 @@ namespace test2
                 current_player = -1;
 
             add_stone(px, py, current_player);
-
-            next_round();
-            //if (players[current_player] == 0)
-                //cpu_move();
+            Debug.WriteLine("current_step:{0}", _View.current_step);
+            if (board.end_game())
+            {
+                eng_game();
+            }
+            if (current_state == User_State.gaming){
+                next_round();
+                await cpu_move();
+                next_round();
+            }
             return;
         }
 
+        private void eng_game() {
+            current_state = User_State.endgame;
+        }
         private void next_round()
         {
-            current_player = 1 - current_player;
+            current_player = -current_player;
         }
-        private void cpu_move(object sender, RoutedEventArgs e)
+        private async void cpu_move(object sender, RoutedEventArgs e)
+        {
+            await cpu_move();
+        }
+        async private Task cpu_move()
         {
             //if (players[current_player] != 0)
             //    return;
-            current_player = -1;
-            (int,int) pt = game.get_opt_move(board, current_player);
+            //current_player = -1;
+            //current_player = -1;
+            Debug.WriteLine("player:" + current_player);
 
-            Debug.WriteLine(pt);
-
+            Task<(int, int)> get_move = Task.Run(()=>game.get_opt_move(board, current_player));
+            (int, int) pt = await get_move;
+            Debug.WriteLine(pt+",player:"+current_player);
             add_stone(pt, current_player);
-            board.add_stone(current_player, pt);
-            next_round();
         }
         private void add_stone((int,int) pt, int player)
         {
@@ -93,6 +135,12 @@ namespace test2
             Canvas.SetTop(stone, py* board_grid_width);
             Canvas.SetLeft(stone, px* board_grid_width);
             GameBoard.Children.Add(stone);
+            _View.current_step++;
+
+            if (board.end_game())
+            {
+
+            }
         }
 
         private void Restart(object sender, RoutedEventArgs e)
@@ -121,5 +169,19 @@ namespace test2
         {
             board.print_board();
         }
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TabItem data = Tab.SelectedItem as TabItem;
+
+            if (data.Header == versusCPU.Header)
+            {
+                current_state = User_State.gaming;
+            }
+            else if(data.Header == test.Header)
+            {
+                current_state = User_State.discuss;
+            }
+        }
+
     }
 }

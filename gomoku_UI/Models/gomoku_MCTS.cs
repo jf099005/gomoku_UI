@@ -172,6 +172,7 @@ namespace gomoku
 
         public (int,int) get_opt_move(Board board, int player)
         {
+            Thread.Sleep(1000);
             return get_rand_move(board, player);
         }
 
