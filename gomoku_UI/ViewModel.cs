@@ -11,6 +11,7 @@ using System.Windows.Input;
 
 using gomoku_UI.Models;
 using System.Windows.Media;
+using System.Windows;
 
 namespace gomoku_UI
 {
@@ -86,6 +87,9 @@ namespace gomoku_UI
         //methods ---------------------------------------
         public ViewModel()
         {
+            Start_Page start_Page = new Start_Page();
+            start_Page.Show();
+
             agent = new Game_Agent();
             _current_step = 123;
             io_state = UI_state.ready;
@@ -93,11 +97,12 @@ namespace gomoku_UI
 
         private void VM_add_stone(int px, int py, Player color = Player.None)
         {
-            if (!agent.is_valid_move(color, px,py))
+            if (!agent.is_valid_move(color, px, py))
             {
+                Debug.WriteLine("VM: invalid move");
                 return;
             }
-            if (color == Player.None || color==agent.Current_Player)
+            if (color == Player.None || color == agent.Current_Player)
             {
                 color = agent.current_player_move(px, py);
             }
@@ -105,11 +110,16 @@ namespace gomoku_UI
             {
                 agent.add_stone((int)color, new Axis(px, py));
             }
-            UI_board.Add(new UI_stone(px,py,board_grid_width,color));
+            UI_board.Add(new UI_stone(px, py, board_grid_width, color));
+
+            if(agent.Current_State==Game_State.endgame)
+            {
+                _show_result_window();
+            }
         }
         private async Task VM_cpu_move()
         {
-            (int px,int py) = await agent.get_cpu_move( agent.Current_Player );
+            (int px, int py) = await agent.get_cpu_move(agent.Current_Player);
             VM_add_stone(px, py);
         }
 
@@ -118,7 +128,7 @@ namespace gomoku_UI
             if (obj is MouseEventArgs e)
             {
                 var canvas = e.Source as System.Windows.IInputElement;
-                if(canvas is not null)
+                if (canvas is not null)
                 {
                     double mouse_x = e.GetPosition(canvas).X;
                     double mouse_y = e.GetPosition(canvas).Y;
@@ -148,7 +158,7 @@ namespace gomoku_UI
         {
             get
             {
-                return new RelayCommand(e=>board_mousedown(e) );
+                return new RelayCommand(e => board_mousedown(e));
             }
         }
 
@@ -158,7 +168,7 @@ namespace gomoku_UI
         {
             get
             {
-                return  _current_step;
+                return _current_step;
             }
             set
             {
@@ -167,5 +177,19 @@ namespace gomoku_UI
             }
         }
 
+        public void _show_result_window()
+        {
+            Debug.WriteLine("show_result_window");
+            Window result_window = new Game_Result_Window();
+            result_window.Show();
+        }
+
+        public ICommand Show_Result
+        {
+            get
+            {
+                return new RelayCommand(e => _show_result_window());
+            }
+        }
     }
 }

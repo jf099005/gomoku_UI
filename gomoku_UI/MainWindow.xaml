@@ -75,7 +75,7 @@
                         <Button Grid.Column="1" Content="restart" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" Click="Restart"/>
                         <!--Button Grid.Column="1" Content="calculate state" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Click="calculate_state"/>
                         -->
-                        <Button Grid.Column="1" Content="HAHA" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26"/>
+                        <Button Grid.Column="1" Content="show result" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Command="{Binding Show_Result}"/>
                         <Button Grid.Column="1" Content="cpu move" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" />
                         <Button Grid.Column="1" Content="show board" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" />
                     </StackPanel>

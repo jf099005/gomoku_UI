@@ -17,6 +17,14 @@ namespace gomoku_UI.Models
         public readonly int board_size = 10;
         
         private Game_State current_state;
+        public Game_State Current_State
+        {
+            get
+            {
+                return current_state;
+            }
+        }
+
         private Board board;
         private Gomoku_CPU_player cpu_player;
         private  Player current_player;
