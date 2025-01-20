@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 
 using gomoku;
-using gomoku_UI.Models.Axis;
+using gomoku_UI.Models;
 namespace gomoku
 {
     enum State
@@ -26,16 +26,7 @@ namespace gomoku
         enemy_win = 50,
         self_win = 51,
     }
-
-    //public static bool operator >(State a, State b)
-    //{
-    //    return Math.Abs(a) > Math.Abs(b);
-    //}
-    //public static bool operator <(State a, State b)
-    //{
-    //    return Math.Abs(a) < Math.Abs(b);
-    //}
-    class Gomoku_MCTS
+    class Gomoku_MCTS:Gomoku_CPU_player
     {
         System.Random rand_step;
         string[] win_shape = { "OOOOO" };
@@ -147,7 +138,7 @@ namespace gomoku
                     board.undo();
                 }
             }
-            Debug.WriteLine(mx_state);
+            //Debug.WriteLine(mx_state);
             return critical_pt;
         }
 
@@ -170,7 +161,7 @@ namespace gomoku
             return (py,px);
         }
 
-        public (int,int) get_opt_move(Board board, int player)
+        public override (int,int) get_opt_move(Board board, int player)
         {
             Thread.Sleep(1000);
             return get_rand_move(board, player);

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using gomoku_UI.Models.Axis;
+using gomoku_UI.Models;
 namespace gomoku
 {
     class Board
@@ -89,7 +89,7 @@ namespace gomoku
             }
         }
 
-        public bool end_game()
+        public bool is_endgame()
         {
             for(int px = 0; px < board_size; px++)
             {

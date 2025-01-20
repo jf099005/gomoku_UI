@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gomoku_UI"
         mc:Ignorable="d"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:ia="using:CommunityToolkit.Mvvm"        
         Title="MainWindow" Height="450" Width="800">
-
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
+    
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="500"/>
@@ -16,8 +21,40 @@
             <RowDefinition Height="400"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
+
+
         <!-- board -->
-        <Canvas x:Name="GameBoard" Width="400" Height="400" Background="LightBlue" MouseDown="PutStone_event" Grid.Row="0" Grid.Column="0"/>
+        <ItemsControl ItemsSource="{Binding UI_board}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Width="400" Height="400" Background="LightBlue">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDown">
+                                <i:InvokeCommandAction Command="{Binding Board_MouseDown}" PassEventArgsToCommand="True"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers> 
+                    </Canvas>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Canvas.Left" Value="{Binding x}" />
+                        <Setter Property="Canvas.Top" Value="{Binding y}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Width="20" 
+                                 Height="20"
+                                 Fill="{Binding color}"
+                        />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+         
 
         <TabControl x:Name="Tab"  Margin="5" Grid.Row="0" Grid.Column="1" SelectionChanged="TabControl_SelectionChanged">
             <TabItem x:Name="versusCPU" Header="VS CPU">
@@ -38,9 +75,9 @@
                         <Button Grid.Column="1" Content="restart" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" Click="Restart"/>
                         <!--Button Grid.Column="1" Content="calculate state" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Click="calculate_state"/>
                         -->
-                        <Button Grid.Column="1" Content="HAHA" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Command="{Binding HAHA}"/>
-                        <Button Grid.Column="1" Content="cpu move" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" Click="cpu_move"/>
-                        <Button Grid.Column="1" Content="show board" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" Click="print_board"/>
+                        <Button Grid.Column="1" Content="HAHA" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26"/>
+                        <Button Grid.Column="1" Content="cpu move" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" />
+                        <Button Grid.Column="1" Content="show board" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" />
                     </StackPanel>
                 </Grid>
             </TabItem>
