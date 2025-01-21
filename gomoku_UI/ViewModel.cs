@@ -84,16 +84,18 @@ namespace gomoku_UI
             }
         }
 
+        private Player player_color;
         //methods ---------------------------------------
-        public ViewModel()
+        public ViewModel(int _player_color=1, int _ai_level=0)
         {
-            Start_Page start_Page = new Start_Page();
-            start_Page.Show();
-
-            agent = new Game_Agent();
+            agent = new Game_Agent(_player_color, _ai_level);
+            player_color= (Player)_player_color;
             _current_step = 123;
             io_state = UI_state.ready;
+            if (player_color == Player.White)
+                VM_cpu_move();
         }
+
 
         private void VM_add_stone(int px, int py, Player color = Player.None)
         {
@@ -134,7 +136,7 @@ namespace gomoku_UI
                     double mouse_y = e.GetPosition(canvas).Y;
                     int px = (int)(mouse_x / board_grid_width);
                     int py = (int)(mouse_y / board_grid_width);
-                    if (agent.is_valid_move(px, py))
+                    if (agent.is_valid_move(player_color, px, py))
                     {
                         VM_add_stone(px, py);
                     }

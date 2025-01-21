@@ -15,18 +15,18 @@ using System.Windows.Shapes;
 namespace gomoku_UI
 {
     /// <summary>
-    /// Interaction logic for Start_Menu.xaml
+    /// Interaction logic for Game_Page.xaml
     /// </summary>
-    public partial class Start_Page : Window
+    public partial class Game_Page : Page
     {
-        public Start_Page()
+        public Game_Page()
         {
             InitializeComponent();
         }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public Game_Page(int player_color, int AI_level)
         {
-
+            InitializeComponent();
+            this.DataContext = new ViewModel(player_color, AI_level);
         }
     }
 }

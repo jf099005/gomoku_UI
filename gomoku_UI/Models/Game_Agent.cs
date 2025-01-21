@@ -34,13 +34,21 @@ namespace gomoku_UI.Models
                 return current_player;
             }
         }
-        public Game_Agent() {
+        public Game_Agent(int player_color= 1, int ai_level=0) {
+            if(player_color!= 1 && player_color != -1)
+            {
+                //Debug.WriteLine("Error: invalid player color");
+                throw new Exception("Error: invalid player color");
+                return;
+            }
             current_state = Game_State.gaming;
             current_player = Player.Black;
             board = new Board(board_size);
-            player_type[Player.Black] = Player_Type.Human;
-            player_type[Player.White] = Player_Type.CPU;
+            player_type[(Player)player_color] = Player_Type.Human;
+            player_type[(Player)(-player_color)] = Player_Type.CPU;
             cpu_player = new Gomoku_MCTS();
+
+            Debug.WriteLine("start with player color:" + player_color);
         }
 
 

@@ -15,25 +15,20 @@ using System.Windows.Shapes;
 namespace gomoku_UI
 {
     /// <summary>
-    /// Interaction logic for Game_Result.xaml
+    /// Interaction logic for Start_Menu.xaml
     /// </summary>
-    public partial class Game_Result_Window : Window
+    public partial class Information_Window : Window
     {
-        public Game_Result_Window(int winner)
+        public event EventHandler StartGame;
+        public Information_Window()
         {
             InitializeComponent();
-            if(winner == 1)
-            {
-                Winner.Text = "Player Win!";
-            }
-            else if (winner == -1)
-            {
-                Winner.Text = "Player Lose!";
-            }
-            else
-            {
-                Winner.Text = "Draw!";
-            }
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            StartGame?.Invoke(this, EventArgs.Empty);
+            this.Close();
         }
     }
 }
