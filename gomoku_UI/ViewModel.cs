@@ -114,9 +114,10 @@ namespace gomoku_UI
             }
             UI_board.Add(new UI_stone(px, py, board_grid_width, color));
 
-            if(agent.Current_State==Game_State.endgame)
+            if(agent.Current_State == Game_State.endgame)
             {
-                _show_result_window();
+                Debug.WriteLine("endgame, receive winner:{0}", agent.winner);
+                _show_result_window( agent.winner );
             }
         }
         private async Task VM_cpu_move()
@@ -179,18 +180,22 @@ namespace gomoku_UI
             }
         }
 
-        public void _show_result_window()
+        public void _show_result_window(object e)
         {
-            Debug.WriteLine("show_result_window");
-            Window result_window = new Game_Result_Window();
-            result_window.Show();
+            if (e is int winner)
+            {
+                Debug.WriteLine("show_result_window");
+                Debug.WriteLine("winner:{0}", winner);
+                Window result_window = new Game_Result_Window(winner);
+                result_window.Show();
+            }
         }
 
         public ICommand Show_Result
         {
             get
             {
-                return new RelayCommand(e => _show_result_window());
+                return new RelayCommand(e => _show_result_window(e));
             }
         }
     }

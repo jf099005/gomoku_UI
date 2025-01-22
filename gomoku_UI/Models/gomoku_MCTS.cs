@@ -163,7 +163,7 @@ namespace gomoku
 
         public override (int,int) get_opt_move(Board board, int player)
         {
-            Thread.Sleep(2000);
+            //Thread.Sleep(2000);
             return get_rand_move(board, player);
         }
 

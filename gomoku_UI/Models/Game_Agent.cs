@@ -39,7 +39,6 @@ namespace gomoku_UI.Models
             {
                 //Debug.WriteLine("Error: invalid player color");
                 throw new Exception("Error: invalid player color");
-                return;
             }
             current_state = Game_State.gaming;
             current_player = Player.Black;
@@ -47,7 +46,6 @@ namespace gomoku_UI.Models
             player_type[(Player)player_color] = Player_Type.Human;
             player_type[(Player)(-player_color)] = Player_Type.CPU;
             cpu_player = new Gomoku_MCTS();
-
             Debug.WriteLine("start with player color:" + player_color);
         }
 
@@ -106,17 +104,24 @@ namespace gomoku_UI.Models
 
         bool check_endgame()
         {
-            Debug.WriteLine("check_endgame");
             if (board.is_endgame())
             {
-                Debug.WriteLine("endgame");
                 current_state = Game_State.endgame;
                 return true;
             }
-            Debug.WriteLine("not endgame");
-            board.print_board();
-
             return false;
+        }
+
+        public int winner { 
+            get
+            {
+                if (board.is_endgame())
+                    return board.winner();
+                else
+                {
+                    return 0;
+                }
+            } 
         }
 
         private void change_color()
@@ -140,6 +145,5 @@ namespace gomoku_UI.Models
             (int,int) pt = await cpu_calculate;
             return pt;
         }
-        
     }
 }
