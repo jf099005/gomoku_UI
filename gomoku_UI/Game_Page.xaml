@@ -7,15 +7,15 @@
         mc:Ignorable="d"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:ia="using:CommunityToolkit.Mvvm"        
-        Title="Game_Page" Height="450" Width="800">
+        Title="Game_Page" Height="900" Width="1600">
     <Grid >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500"/>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="1000"/>
+            <ColumnDefinition Width="600"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="400"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="800"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
 
@@ -23,7 +23,7 @@
         <ItemsControl ItemsSource="{Binding UI_board}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Width="400" Height="400" Background="LightBlue">
+                    <Canvas x:Name="board_background" Width="800" Height="800" Background="LightBlue">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDown">
                                 <i:InvokeCommandAction Command="{Binding Board_MouseDown}" PassEventArgsToCommand="True"/>
@@ -42,8 +42,8 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Ellipse Width="20" 
-                                 Height="20"
+                    <Ellipse Width="40" 
+                                 Height="40"
                                  Fill="{Binding color}"
                         />
                 </DataTemplate>
@@ -63,8 +63,11 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
+                    
                     <TextBlock Text="{Binding current_step}" Margin="0,10,0,174" Grid.RowSpan="2"></TextBlock>
-                    <local:player_info Grid.Row="1" Grid.Column="0" />
+                    
+                    <!-- player informations-->
+                    <local:player_info x:Name="Player_Info" DataContext="{Binding PlayerInfo}"/>
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="CPU informations" HorizontalAlignment="Center" VerticalAlignment="Center" Height="15" Width="100" />
                 </Grid>
             </TabItem>

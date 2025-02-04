@@ -45,7 +45,8 @@ namespace gomoku_UI.Models
             board = new Board(board_size);
             player_type[(Player)player_color] = Player_Type.Human;
             player_type[(Player)(-player_color)] = Player_Type.CPU;
-            cpu_player = new Gomoku_MCTS();
+            //cpu_player = new Gomoku_MCTS();
+            cpu_player = new Negamax(board_size);
             Debug.WriteLine("start with player color:" + player_color);
         }
 
@@ -62,6 +63,8 @@ namespace gomoku_UI.Models
         }
         public bool is_valid_move(Player color, int px, int py)
         {
+            if (px < 0 || py < 0 || px >= board_size || py >= board_size)
+                return false;
             if(color==Player.None)
                 return is_valid_move(px, py);
             switch (current_state)

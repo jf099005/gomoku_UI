@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:ia="using:CommunityToolkit.Mvvm"        
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="900" Width="1600">
     <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
 </Window>

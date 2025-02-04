@@ -44,12 +44,13 @@ namespace gomoku_UI
         data_processing,
 
     }
+
+
     public class ViewModel : INotifyPropertyChanged
     {
-        public int board_size = 10;
-        public int board_grid_width = 40;
-        public double stone_diameter = 20;
-        private UI_state io_state;
+        public int board_size = 15;
+        public int board_grid_width = 53;
+        public double stone_diameter = 35;
 
         //private Board board;
         private Game_Agent agent;
@@ -58,15 +59,6 @@ namespace gomoku_UI
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void RaisePropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         private ObservableCollection<UI_stone> _UI_board = new ObservableCollection<UI_stone>();
@@ -85,15 +77,19 @@ namespace gomoku_UI
         }
 
         private Player player_color;
+        public player_info_ViewModel PlayerInfo;
+
+
         //methods ---------------------------------------
         public ViewModel(int _player_color=1, int _ai_level=0)
         {
             agent = new Game_Agent(_player_color, _ai_level);
             player_color= (Player)_player_color;
             _current_step = 123;
-            io_state = UI_state.ready;
+            PlayerInfo = new player_info_ViewModel();
             if (player_color == Player.White)
                 VM_cpu_move();
+
         }
 
 
@@ -101,8 +97,8 @@ namespace gomoku_UI
         {
             if (!agent.is_valid_move(color, px, py))
             {
-                Debug.WriteLine("VM: invalid move");
-                return;
+                throw new Exception("VM: invalid move");
+                //return;
             }
             if (color == Player.None || color == agent.Current_Player)
             {
@@ -146,7 +142,7 @@ namespace gomoku_UI
                         return;
                     }
 
-                    if (agent.is_cpu_turn())
+                    if (agent.is_cpu_turn() && agent.Current_State != Game_State.endgame)
                     {
                         VM_cpu_move();
                     }
@@ -154,7 +150,7 @@ namespace gomoku_UI
             }
             else
             {
-                Debug.WriteLine("obj is not MouseEventArgs");
+                throw new Exception("Error: obj is not MouseEventArgs");
             }
         }
         public ICommand Board_MouseDown
@@ -175,7 +171,7 @@ namespace gomoku_UI
             }
             set
             {
-                RaisePropertyChanged("current_step");
+                OnPropertyChanged("current_step");
                 _current_step = value;
             }
         }

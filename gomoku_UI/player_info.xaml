@@ -7,6 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="200">
     <Grid>
-        <TextBlock Text="Player informations" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <StackPanel>
+            <TextBlock x:Name="topic" Text="{Binding topic}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="remaining_time" Text="{Binding left_time_str}"/>
+        </StackPanel>
+        
     </Grid>
 </UserControl>
