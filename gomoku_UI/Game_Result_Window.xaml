@@ -1,12 +1,12 @@
-﻿<Window x:Class="gomoku_UI.MainWindow"
+﻿<Window x:Class="gomoku_UI.Game_Result_Window"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gomoku_UI"
         mc:Ignorable="d"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:ia="using:CommunityToolkit.Mvvm"        
-        Title="MainWindow" Height="900" Width="1600">
-    <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+        Title="Game_Result" Height="200" Width="400">
+    <Grid>
+        <TextBlock x:Name="Winner" Text="Game Result" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"/>
+    </Grid>
 </Window>

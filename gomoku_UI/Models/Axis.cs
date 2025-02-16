@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace gomoku_UI.Models.Axis
+namespace gomoku_UI.Models
 {
-    struct Axis
+    public struct Axis
     {
         public int x { get; set; }
         public int y { get; set; }
@@ -28,4 +28,15 @@ namespace gomoku_UI.Models.Axis
             return new Axis(c * a.x, c * a.y);
         }
     };
+    public enum Player
+    {
+        Black=1,
+        White=-1,
+        None=0
+    }
+    public enum Player_Type
+    {
+        CPU,
+        Human
+    }
 }

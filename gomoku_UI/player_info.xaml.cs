@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,24 +12,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
-using gomoku;
-using gomoku_UI.Models;
 namespace gomoku_UI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for player_info.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class player_info : UserControl
     {
-
-        public MainWindow()
+        public player_info()
         {
             InitializeComponent();
-            Entrance entrance = new Entrance();
-            MainFrame.Content = new Frame() { Content=entrance};
-
         }
-
     }
 }
