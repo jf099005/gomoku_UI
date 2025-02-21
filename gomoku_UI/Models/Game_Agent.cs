@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using gomoku_UI.Models;
 using System.Windows.Controls;
+using System.Windows.Documents;
 namespace gomoku_UI.Models
 {
 
@@ -34,12 +35,13 @@ namespace gomoku_UI.Models
                 return current_player;
             }
         }
-        public Game_Agent(int player_color= 1, int ai_level=0) {
+        public Game_Agent(int n, int player_color, int ai_level) {
             if(player_color!= 1 && player_color != -1)
             {
                 //Debug.WriteLine("Error: invalid player color");
                 throw new Exception("Error: invalid player color");
             }
+            board_size = n;
             current_state = Game_State.gaming;
             current_player = Player.Black;
             board = new Board(board_size);
@@ -51,6 +53,11 @@ namespace gomoku_UI.Models
         }
 
 
+
+        public bool out_of_bound(int px,int py)
+        {
+            return board.out_of_bound(px, py);
+        }
         public bool is_valid_move(int px, int py)
         {
             switch (current_state)
@@ -63,10 +70,10 @@ namespace gomoku_UI.Models
         }
         public bool is_valid_move(Player color, int px, int py)
         {
-            if (px < 0 || py < 0 || px >= board_size || py >= board_size)
+            if (board.out_of_bound(px,py))
                 return false;
             if(color==Player.None)
-                return is_valid_move(px, py);
+                throw new Exception("Error: calling is_valid_move on NULL player");
             switch (current_state)
             {
                 case Game_State.gaming:

@@ -13,7 +13,7 @@ namespace gomoku_UI.Models
 {
     class Negamax: Gomoku_CPU_player
     {
-        const string dll_path = @"C:\Users\user\Downloads\2025winter\alpha_beta_Gomoku\x64\Release\alpha_beta_Gomoku.dll";
+        const string dll_path = @"C:\Users\user\Downloads\2025winter\vs\alpha_beta_Gomoku\x64\Release\alpha_beta_Gomoku.dll";
         [DllImport(dll_path, EntryPoint = "get_negamax_agent")]
         private static extern IntPtr get_negamax_agent(int board_size);
 

@@ -44,6 +44,10 @@ namespace gomoku
         {
             return Math.Min(pos.x, pos.y) < 0 || Math.Max(pos.x, pos.y) >= board_size;
         }
+        public bool out_of_bound(int x,int y)
+        {
+            return Math.Min(x,y) < 0 || Math.Max(x,y) >= board_size;
+        }
         public int this[int x, int y]
         {
             get { return board[x, y]; }

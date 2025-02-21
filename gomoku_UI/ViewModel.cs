@@ -12,6 +12,8 @@ using System.Windows.Input;
 using gomoku_UI.Models;
 using System.Windows.Media;
 using System.Windows;
+using System.Runtime.InteropServices.Marshalling;
+using System.Windows.Controls.Primitives;
 
 namespace gomoku_UI
 {
@@ -20,29 +22,38 @@ namespace gomoku_UI
         public int x { get; set; }
         public int y { get; set; }
         public Brush color { get; set; }
-        public UI_stone(int x, int y, int board_grid_width)
+        public int diameter { get; set; }
+        public UI_stone(int x, int y, int board_grid_width, int diameter, Player color, bool is_mouse_position = false)
         {
-            this.x = x*board_grid_width;
-            this.y = y*board_grid_width;
-            color = Brushes.Black;
-        }
-        public UI_stone(int x, int y, int board_grid_width, Player color)
-        {
-            this.x = x * board_grid_width;
-            this.y = y * board_grid_width;
+            this.x = x * board_grid_width - diameter / 2 + board_grid_width / 2;
+            this.y = y * board_grid_width- diameter/2 + board_grid_width / 2;
+            this.diameter = diameter;
+            if (is_mouse_position && !(color == Player.None))
+            {
+                throw new Exception("ERROR: non-player move cannot be set into mouse position");
+            }
             if (color == Player.Black)
                 this.color = Brushes.Black;
-            else
+            else if(color==Player.White)
                 this.color = Brushes.White;
+            else if(color == Player.None)
+            {
+                if (is_mouse_position)
+                {
+                    this.color = Brushes.DarkRed;
+                }
+                else
+                {
+                    throw new Exception("ERROR: invalid stone type:" + color.ToString());
+                }
+            }
         }
-
     }
 
     enum UI_state
     {
         ready,
         data_processing,
-
     }
 
 
@@ -50,10 +61,12 @@ namespace gomoku_UI
     {
         public int board_size = 15;
         public int board_grid_width = 53;
-        public double stone_diameter = 35;
-
+        public int stone_diameter = 35;
+        int mouse_mark_diameter = 10;
         //private Board board;
         private Game_Agent agent;
+
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
@@ -83,17 +96,16 @@ namespace gomoku_UI
         //methods ---------------------------------------
         public ViewModel(int _player_color=1, int _ai_level=0)
         {
-            agent = new Game_Agent(_player_color, _ai_level);
+            agent = new Game_Agent(board_size, _player_color, _ai_level);
             player_color= (Player)_player_color;
             _current_step = 123;
             PlayerInfo = new player_info_ViewModel();
             if (player_color == Player.White)
                 VM_cpu_move();
-
         }
 
 
-        private void VM_add_stone(int px, int py, Player color = Player.None)
+        private void VM_add_stone(int px, int py, Player color)
         {
             if (!agent.is_valid_move(color, px, py))
             {
@@ -108,7 +120,7 @@ namespace gomoku_UI
             {
                 agent.add_stone((int)color, new Axis(px, py));
             }
-            UI_board.Add(new UI_stone(px, py, board_grid_width, color));
+            UI_board.Add(new UI_stone(px, py, board_grid_width, stone_diameter, color));
 
             if(agent.Current_State == Game_State.endgame)
             {
@@ -116,10 +128,71 @@ namespace gomoku_UI
                 _show_result_window( agent.winner );
             }
         }
+
+        private void VM_add_mouse_position(int px, int py)
+        {
+            if (agent.out_of_bound(px,py))
+            {
+                throw new Exception("VM: invalid move");
+            }
+            for(int i = 0; i < UI_board.Count; i++)
+            {
+                if (UI_board[i].diameter == mouse_mark_diameter)
+                {
+                    UI_board.Remove(UI_board.Where(i=>i.diameter == mouse_mark_diameter).Single());
+                    break;
+                }
+            }
+            if (agent.out_of_bound(px, py))
+            {
+                return;
+            }
+
+            UI_board.Add(new UI_stone(px, py, board_grid_width, mouse_mark_diameter, Player.None, true));
+        }
         private async Task VM_cpu_move()
         {
             (int px, int py) = await agent.get_cpu_move(agent.Current_Player);
-            VM_add_stone(px, py);
+            if(!agent.is_valid_move(agent.Current_Player, px, py))
+            {
+                throw new Exception("ERROR: cpu move at invalid position:" + px.ToString() + "," + py.ToString());
+            }
+            VM_add_stone(px, py, agent.Current_Player);
+        }
+
+        void board_mousemove(object obj)
+        {
+            if(obj is MouseEventArgs e)
+            {
+
+                //Debug.WriteLine("mouse moved");
+
+                var canvas = e.Source as System.Windows.IInputElement;
+                if (canvas is not null)
+                {
+                    double mouse_x = e.GetPosition(canvas).X;
+                    double mouse_y = e.GetPosition(canvas).Y;
+                    //Debug.WriteLine("position: ("+mouse_x.ToString()+","+mouse_y.ToString()+")");
+                    int px = (int)(mouse_x / board_grid_width);
+                    int py = (int)(mouse_y / board_grid_width);
+                    if (!agent.out_of_bound(px, py))
+                    {
+                        VM_add_mouse_position(px, py);
+                    }
+                }
+
+            }
+            else
+            {
+                throw new Exception("ERROR occur on mouse-move");
+            }
+        }
+        public ICommand Board_MouseMove
+        {
+            get
+            {
+                return new RelayCommand(e=>board_mousemove(e));
+            }
         }
 
         void board_mousedown(object obj)
@@ -135,10 +208,11 @@ namespace gomoku_UI
                     int py = (int)(mouse_y / board_grid_width);
                     if (agent.is_valid_move(player_color, px, py))
                     {
-                        VM_add_stone(px, py);
+                        VM_add_stone(px, py, agent.Current_Player);
                     }
                     else
                     {
+                        Debug.WriteLine("invalid position:(" + px.ToString() + "," + py.ToString());
                         return;
                     }
 

@@ -7,15 +7,34 @@
         mc:Ignorable="d"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:ia="using:CommunityToolkit.Mvvm"        
-        Title="Entrance" Height="450" Width="800">
+        Title="Entrance" Height="450" Width="800"
+
+      >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="500"/>
             <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
         <TabControl Grid.Column="0">
-            <TabItem Header="VS CPU"></TabItem>
-            <TabItem Header="VS Human"></TabItem>
+            <TabItem Header="VS CPU">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="197*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.ColumnSpan="2">
+                        <TextBlock.FontSize>30</TextBlock.FontSize>
+                        <TextBlock.Text>CPU</TextBlock.Text>
+                    </TextBlock>
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="VS Human">
+                <TextBlock>
+                    <TextBlock.FontSize>30</TextBlock.FontSize>
+                    <TextBlock.Text>HUMAN</TextBlock.Text>
+                </TextBlock>
+            </TabItem>
         </TabControl>
 
         <Button Content="Start" FontSize="40" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Start_Button_Click" Height="78" Width="128"/>
