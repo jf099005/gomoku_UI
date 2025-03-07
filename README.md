@@ -1,5 +1,5 @@
 # What is this project
-A gomoku graphic interface, you can use this interface to play with your own game algorithm
+A gomoku graphic interface, you can use this interface to play with your own game algorithm, it's suggested to use Negamax_agent brench.
 
 # enviroment
 This program is developed with .net 9.0, wpf framework. 
